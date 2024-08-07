@@ -61,7 +61,11 @@ $conn->close();
         .form-container:hover {
             transform: translateY(-5px);
         }
-        .input-field input[type=text], .input-field input[type=number], .input-field input[type=file] {
+        .input-field input[type=text]:not(.file-input), .input-field input[type=number]:not(.file-input) {
+            background-color: #ffe8d6;
+            pointer-events: none;
+        }
+        .file-input {
             background-color: #ffe8d6;
         }
         .btn-primary {
@@ -99,6 +103,31 @@ $conn->close();
         }
         .hide {
             display: none;
+        }
+        .editable-icon {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #C2185B;
+        }
+        .editable-icon:hover {
+            color: #a71d44;
+        }
+        .file-icons .btn-small i {
+            margin: 0;
+        }
+        .file-icons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .file-field .file-path-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .file-field .file-path-wrapper input {
+            flex-grow: 1;
         }
         @media (max-width: 768px) {
             .form-container {
@@ -168,71 +197,84 @@ $conn->close();
                             <img src="<?php echo $alumno['fotografia']; ?>" alt="Fotografía del alumno">
                         <?php endif; ?>
                     </div>
-                    <form method="post" action="guardar_editar_preescolar.php" enctype="multipart/form-data">
+                    <form id="editarForm" method="post" action="guardar_editar_preescolar.php" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="<?php echo $alumno['id']; ?>">
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('nombre')">edit</i>
                             <input type="text" id="nombre" name="nombre" value="<?php echo $alumno['nombre']; ?>" required>
                             <label for="nombre">Nombre</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('apellido_paterno')">edit</i>
                             <input type="text" id="apellido_paterno" name="apellido_paterno" value="<?php echo $alumno['apellido_paterno']; ?>" required>
                             <label for="apellido_paterno">Apellido paterno</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('apellido_materno')">edit</i>
                             <input type="text" id="apellido_materno" name="apellido_materno" value="<?php echo $alumno['apellido_materno']; ?>">
                             <label for="apellido_materno">Apellido materno</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('edad')">edit</i>
                             <input type="number" id="edad" name="edad" value="<?php echo $alumno['edad']; ?>" required>
                             <label for="edad">Edad</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" id="curp" name="curp" value="<?php echo $alumno['curp_documento']; ?>" required>
                             <label for="curp">CURP</label>
-                            <div class="pdf-buttons">
+                            <input type="text" id="curp" name="curp" value="<?php echo $alumno['curp_documento']; ?>" required>
+                            <div class="pdf-buttons file-icons">
                                 <?php if($alumno['curp_documento']): ?>
                                     <button type="button" class="btn-small red lighten-1" onclick="removeCurpPdf()"><i class="material-icons">delete</i></button>
+                                    <button type="button" class="btn-small blue lighten-1" onclick="viewPdf('<?php echo $alumno['curp_documento']; ?>')"><i class="material-icons">visibility</i></button>
                                 <?php endif; ?>
                                 <input type="file" id="curp_pdf" name="curp_pdf" accept="application/pdf" class="hide">
                             </div>
                         </div>
                         <div class="input-field">
-                            <label for="certificado_medico">Añadir certificado médico</label>
-                            <div class="pdf-buttons">
+                            <label for="certificado_medico">Certificado Médico</label>
+                            <input type="text" id="certificado_medico" name="certificado_medico" value="<?php echo $alumno['certificado_medico']; ?>" placeholder="Certificado Médico">
+                            <div class="pdf-buttons file-icons">
                                 <?php if($alumno['certificado_medico']): ?>
                                     <button type="button" class="btn-small red lighten-1" onclick="removeCertificadoMedico()"><i class="material-icons">delete</i></button>
+                                    <button type="button" class="btn-small blue lighten-1" onclick="viewPdf('<?php echo $alumno['certificado_medico']; ?>')"><i class="material-icons">visibility</i></button>
                                 <?php endif; ?>
-                                <input type="file" id="certificado_medico" name="certificado_medico" accept="application/pdf" class="hide">
+                                <input type="file" id="certificado_medico_pdf" name="certificado_medico_pdf" accept="application/pdf" class="hide">
                             </div>
                         </div>
                         <h4 class="text-center">Información del tutor</h4>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('nombre_tutor')">edit</i>
                             <input type="text" id="nombre_tutor" name="nombre_tutor" value="<?php echo $alumno['tutor_nombre']; ?>" required>
                             <label for="nombre_tutor">Nombre del tutor</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('apellido_paterno_tutor')">edit</i>
                             <input type="text" id="apellido_paterno_tutor" name="apellido_paterno_tutor" value="<?php echo $alumno['tutor_apellido_paterno']; ?>" required>
                             <label for="apellido_paterno_tutor">Apellido paterno del tutor</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('apellido_materno_tutor')">edit</i>
                             <input type="text" id="apellido_materno_tutor" name="apellido_materno_tutor" value="<?php echo $alumno['tutor_apellido_materno']; ?>">
                             <label for="apellido_materno_tutor">Apellido materno del tutor</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" id="curp_tutor" name="curp_tutor" value="<?php echo $alumno['tutor_curp']; ?>" required>
                             <label for="curp_tutor">CURP del tutor</label>
-                            <div class="pdf-buttons">
+                            <input type="text" id="curp_tutor" name="curp_tutor" value="<?php echo $alumno['tutor_curp']; ?>" required>
+                            <div class="pdf-buttons file-icons">
                                 <?php if($alumno['tutor_curp']): ?>
                                     <button type="button" class="btn-small red lighten-1" onclick="removeCurpTutorPdf()"><i class="material-icons">delete</i></button>
+                                    <button type="button" class="btn-small blue lighten-1" onclick="viewPdf('<?php echo $alumno['tutor_curp']; ?>')"><i class="material-icons">visibility</i></button>
                                 <?php endif; ?>
                                 <input type="file" id="curp_tutor_pdf" name="curp_tutor_pdf" accept="application/pdf" class="hide">
                             </div>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('telefono_tutor')">edit</i>
                             <input type="text" id="telefono_tutor" name="telefono_tutor" value="<?php echo $alumno['tutor_telefono']; ?>" required>
                             <label for="telefono_tutor">Número de teléfono del tutor</label>
                         </div>
                         <div class="input-field">
+                            <i class="material-icons editable-icon" onclick="enableEdit('direccion')">edit</i>
                             <input type="text" id="direccion" name="direccion" value="<?php echo $alumno['direccion']; ?>" required>
                             <label for="direccion">Dirección</label>
                         </div>
@@ -260,19 +302,28 @@ $conn->close();
             M.updateTextFields();
         });
 
+        function enableEdit(id) {
+            document.getElementById(id).removeAttribute('readonly');
+            document.getElementById(id).focus();
+        }
+
         function removeCurpPdf() {
             document.getElementById('curp_pdf').value = "";
             document.getElementById('curp_pdf').classList.remove('hide');
         }
 
         function removeCertificadoMedico() {
-            document.getElementById('certificado_medico').value = "";
-            document.getElementById('certificado_medico').classList.remove('hide');
+            document.getElementById('certificado_medico_pdf').value = "";
+            document.getElementById('certificado_medico_pdf').classList.remove('hide');
         }
 
         function removeCurpTutorPdf() {
             document.getElementById('curp_tutor_pdf').value = "";
             document.getElementById('curp_tutor_pdf').classList.remove('hide');
+        }
+
+        function viewPdf(path) {
+            window.open(path, '_blank');
         }
     </script>
 </body>

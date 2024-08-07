@@ -190,7 +190,7 @@ $conn->close();
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-            <a href="logout.php" class="waves-effect waves-red btn-flat">Cerrar sesión</a>
+            <a href="logout_admin.php" class="waves-effect waves-red btn-flat">Cerrar sesión</a>
         </div>
     </div>
 
