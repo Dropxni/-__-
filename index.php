@@ -53,23 +53,17 @@ if (isset($_SESSION['user_id'])) {
             height: 120px; /* Aumentar altura del navbar */
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Alinear contenido a los extremos */
+            justify-content: center; /* Centrar contenido horizontalmente */
             padding: 0 20px; /* Añadir padding para el contenido del navbar */
         }
         .brand-wrapper {
             display: flex;
             align-items: center;
+            justify-content: center;
         }
         .brand-logo img {
             max-width: 80px; /* Tamaño adecuado del logo */
             vertical-align: middle;
-        }
-        .brand-title {
-            font-size: 30px; /* Ajustar tamaño del texto */
-            margin-left: 100px; /* Espacio entre el logo y el texto */
-            font-weight: 500;
-            vertical-align: middle;
-            display: inline-block;
         }
         .hero-content {
             text-align: center;
@@ -130,9 +124,6 @@ if (isset($_SESSION['user_id'])) {
             100% { opacity: 1; }
         }
         @media (max-width: 992px) {
-            .brand-title {
-                display: none; /* Ocultar el texto en pantallas medianas y pequeñas */
-            }
             .brand-wrapper {
                 justify-content: center; /* Centrar el logo en pantallas medianas y pequeñas */
             }
@@ -145,7 +136,6 @@ if (isset($_SESSION['user_id'])) {
             <a href="#" class="brand-logo">
                 <img src="img/logo.png" alt="Logo">
             </a>
-            <span class="brand-title"></span>
         </div>
     </nav>
     <div class="container hero-content">
@@ -182,7 +172,7 @@ if (isset($_SESSION['user_id'])) {
                 <a href="tel:9511134056"><img src="img/phone-icon.png" alt="Phone">951-113-40-56</a>
                 <a href="https://wa.me/9511134056"><img src="img/whatsapp-icon.png" alt="WhatsApp">951-113-40-56</a>
             </div>
-            <p>Desarrollado por Dropxni y ChatGPT</p>
+            <p>Desarrollado por Tejones Dev</p>
         </div>
     </footer>
     <!-- Import jQuery and MaterializeJS -->

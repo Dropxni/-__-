@@ -20,6 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono_tutor = $_POST['telefono_tutor'];
     $direccion = $_POST['direccion'];
 
+    // Directorio de subidas
+    $upload_dir = 'uploads/preescolar/';
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+
     // Manejo de archivos
     $curp_pdf = '';
     $certificado_medico = '';
@@ -27,22 +33,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $curp_tutor_pdf = '';
 
     if (isset($_FILES['curp_pdf']) && $_FILES['curp_pdf']['error'] === UPLOAD_ERR_OK) {
-        $curp_pdf = 'uploads/' . uniqid() . '_' . basename($_FILES['curp_pdf']['name']);
+        $curp_pdf = $upload_dir . uniqid() . '_' . basename($_FILES['curp_pdf']['name']);
         move_uploaded_file($_FILES['curp_pdf']['tmp_name'], $curp_pdf);
     }
 
     if (isset($_FILES['certificado_medico']) && $_FILES['certificado_medico']['error'] === UPLOAD_ERR_OK) {
-        $certificado_medico = 'uploads/preescolar/' . uniqid() . '_' . basename($_FILES['certificado_medico']['name']);
+        $certificado_medico = $upload_dir . uniqid() . '_' . basename($_FILES['certificado_medico']['name']);
         move_uploaded_file($_FILES['certificado_medico']['tmp_name'], $certificado_medico);
     }
 
     if (isset($_FILES['fotografia']) && $_FILES['fotografia']['error'] === UPLOAD_ERR_OK) {
-        $fotografia = 'uploads/preescolar/' . uniqid() . '_' . basename($_FILES['fotografia']['name']);
+        $fotografia = $upload_dir . uniqid() . '_' . basename($_FILES['fotografia']['name']);
         move_uploaded_file($_FILES['fotografia']['tmp_name'], $fotografia);
     }
 
     if (isset($_FILES['curp_tutor_pdf']) && $_FILES['curp_tutor_pdf']['error'] === UPLOAD_ERR_OK) {
-        $curp_tutor_pdf = 'uploads/preescolar/' . uniqid() . '_' . basename($_FILES['curp_tutor_pdf']['name']);
+        $curp_tutor_pdf = $upload_dir . uniqid() . '_' . basename($_FILES['curp_tutor_pdf']['name']);
         move_uploaded_file($_FILES['curp_tutor_pdf']['tmp_name'], $curp_tutor_pdf);
     }
 

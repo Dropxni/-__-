@@ -55,39 +55,29 @@ $conn->close();
         .content {
             margin-top: 50px;
         }
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
         .card-custom {
-            width: calc(25% - 20px);
-            margin: 10px;
+            background-color: #ffccbc;
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .card-custom:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
         .card-image-custom {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
         }
         .card-content-custom {
-            background-color: white;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
-        }
-        .card-content-custom h5 {
-            margin: 10px 0;
+            position: relative;
         }
         .card-content-custom p {
-            margin: 0;
-            font-size: 1.1em;
+            margin: 5px 0;
         }
         .search-bar {
             margin-bottom: 20px;
@@ -108,23 +98,16 @@ $conn->close();
             background-color: #C2185B;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px 5px;
+            margin-top: 5px;
         }
         .delete-button {
             background-color: red;
         }
-        @media (max-width: 992px) {
-            .card-custom {
-                width: calc(50% - 20px);
-            }
-        }
-        @media (max-width: 600px) {
-            .card-custom {
-                width: calc(100% - 20px);
-            }
+        .edit-button i, .delete-button i {
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -170,22 +153,27 @@ $conn->close();
 
     <div class="container content">
         <h2 class="text-center">EXPEDIENTE DE ALUMNOS DE PREESCOLAR</h2>
-        <div class="d-flex justify-content-between">
-            <input type="text" class="form-control search-bar" id="searchBar" onkeyup="searchStudents()" placeholder="Buscar por nombre...">
-            <button class="trash-button" onclick="deleteSelectedStudents()">Eliminar seleccionados</button>
+        <div class="row">
+            <div class="col s12 m10 l8 offset-m1 offset-l2">
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input type="text" id="searchBar" class="search-bar" onkeyup="searchStudents()" placeholder="Buscar por nombre...">
+                </div>
+                <button class="trash-button" onclick="deleteSelectedStudents()"><i class="material-icons">delete</i></button>
+            </div>
         </div>
         <form id="deleteForm" method="post" action="eliminar_multiples_preescolar.php">
-            <div class="card-container" id="studentContainer">
+            <div class="row" id="studentContainer">
                 <?php foreach ($alumnos as $alumno): ?>
-                    <div class="card-custom">
-                        <div class="card-image-custom" style="background-image: url('<?php echo $alumno['fotografia']; ?>');"></div>
-                        <div class="card-content-custom">
-                            <h5><?php echo $alumno['nombre'] . ' ' . $alumno['apellido_paterno']; ?></h5>
-                            <p>Edad: <?php echo $alumno['edad']; ?></p>
-                            <input type="checkbox" class="delete-checkbox" name="delete_ids[]" value="<?php echo $alumno['id']; ?>" style="position: absolute; left: 10px; top: 10px;">
-                            <div class="card-action">
-                                <button type="button" class="edit-button" onclick="editStudent(<?php echo $alumno['id']; ?>)">Editar</button>
-                                <button type="button" class="delete-button" onclick="deleteStudent(<?php echo $alumno['id']; ?>)">Eliminar</button>
+                    <div class="col s12 m6 l3">
+                        <div class="card-custom">
+                            <img src="<?php echo $alumno['fotografia']; ?>" alt="Student Photo" class="card-image-custom">
+                            <div class="card-content-custom">
+                                <input type="checkbox" class="delete-checkbox" name="delete_ids[]" value="<?php echo $alumno['id']; ?>" style="position: absolute; left: 10px; top: 10px;">
+                                <p>Nombre: <?php echo $alumno['nombre'] . ' ' . $alumno['apellido_paterno'] . ' ' . $alumno['apellido_materno']; ?></p>
+                                <p>Edad: <?php echo $alumno['edad']; ?></p>
+                                <button type="button" class="edit-button" onclick="editStudent(<?php echo $alumno['id']; ?>)"><i class="material-icons">edit</i></button>
+                                <button type="button" class="delete-button" onclick="deleteStudent(<?php echo $alumno['id']; ?>)"><i class="material-icons">delete</i></button>
                             </div>
                         </div>
                     </div>
@@ -231,10 +219,10 @@ $conn->close();
             input = document.getElementById("searchBar");
             filter = input.value.toLowerCase();
             container = document.getElementById("studentContainer");
-            cards = container.getElementsByClassName("card-custom");
+            cards = container.getElementsByClassName("col");
 
             for (i = 0; i < cards.length; i++) {
-                name = cards[i].getElementsByTagName("h5")[0].textContent || cards[i].getElementsByTagName("h5")[0].innerText;
+                name = cards[i].getElementsByClassName("card-content-custom")[0].getElementsByTagName("p")[0].textContent || cards[i].getElementsByClassName("card-content-custom")[0].getElementsByTagName("p")[0].innerText;
                 if (name.toLowerCase().indexOf(filter) > -1) {
                     cards[i].style.display = "";
                 } else {
