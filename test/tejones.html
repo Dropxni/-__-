@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tejones Dev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.title {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #00bcd4;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.team {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    width: calc(25% - 40px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-member:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.member-photo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background-color: #00bcd4;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite;
+}
+
+#member1 {
+    background-image: url('images/member1.jpg');
+}
+
+#member2 {
+    background-image: url('images/member2.jpg');
+}
+
+#member3 {
+    background-image: url('images/member3.jpg');
+}
+
+#member4 {
+    background-image: url('images/member4.jpg');
+}
+
+.member-name {
+    font-size: 1.5em;
+    margin: 10px 0;
+    color: #00bcd4;
+}
+
+.member-role {
+    font-size: 1.2em;
+    color: #d1d1d1;
+    margin-bottom: 15px;
+}
+
+.member-bio {
+    font-size: 1em;
+    color: #a1a1a1;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.team-member:hover .member-bio {
+    height: auto;
+    opacity: 1;
+    margin-top: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+    .team-member {
+        width: calc(45% - 40px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .team-member {
+        width: calc(100% - 40px);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+    </style>
+    <div class="container">
+        <h1 class="title">Nuestro Equipo de Desarrollo</h1>
+        <div class="team">
+            <div class="team-member">
+                <div class="member-photo" id="member1"></div>
+                <h2 class="member-name">Nombre del Miembro 1</h2>
+                <p class="member-role">Rol en el Equipo</p>
+                <p class="member-bio">Breve descripción o especialidad del miembro 1.</p>
+            </div>
+            <div class="team-member">
+                <div class="member-photo" id="member2"></div>
+                <h2 class="member-name">Nombre del Miembro 2</h2>
+                <p class="member-role">Rol en el Equipo</p>
+                <p class="member-bio">Breve descripción o especialidad del miembro 2.</p>
+            </div>
+            <div class="team-member">
+                <div class="member-photo" id="member3"></div>
+                <h2 class="member-name">Nombre del Miembro 3</h2>
+                <p class="member-role">Rol en el Equipo</p>
+                <p class="member-bio">Breve descripción o especialidad del miembro 3.</p>
+            </div>
+            <div class="team-member">
+                <div class="member-photo" id="member4"></div>
+                <h2 class="member-name">Nombre del Miembro 4</h2>
+                <p class="member-role">Rol en el Equipo</p>
+                <p class="member-bio">Breve descripción o especialidad del miembro 4.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $curp_tutor_pdf = '';
 
     if (isset($_FILES['curp_pdf']) && $_FILES['curp_pdf']['error'] === UPLOAD_ERR_OK) {
-        $curp_pdf = 'uploads/' . uniqid() . '_' . basename($_FILES['curp_pdf']['name']);
+        $curp_pdf = 'uploads/maternal/' . uniqid() . '_' . basename($_FILES['curp_pdf']['name']);
         move_uploaded_file($_FILES['curp_pdf']['tmp_name'], $curp_pdf);
     }
 
