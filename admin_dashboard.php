@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['user_id'])) {
+// Verificar si el usuario está logueado y si es administrador
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') {
     header('Location: login_admin.php');
     exit();
 }
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido - Administrador</title>
+    <title>Dashboard - Administrador</title>
     <!-- Import Google Icon Font -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Import Google Fonts -->
@@ -23,19 +23,18 @@ if (!isset($_SESSION['user_id'])) {
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Baloo 2', cursive;
             color: #555;
         }
-        .navbar, .dropdown-content {
+        nav, .dropdown-content {
             background-color: #f8c291 !important;
-            font-family: 'Baloo 2', cursive !important;
         }
-        .navbar a, .dropdown-content a {
-            color: #fff !important;
+        nav a, .dropdown-content a {
+            color: #555 !important;
         }
         .brand-logo img {
             max-width: 50px;
-            margin-top: 10px;
+            margin-top: 7px;
         }
         .content {
             text-align: center;
@@ -56,8 +55,8 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
     <nav>
-        <div class="nav-wrapper navbar">
-            <a href="#" class="brand-logo"><img src="img/logo.png" alt="Logo"></a>
+        <div class="nav-wrapper">
+            <a href="admin_dashboard.php" class="brand-logo"><img src="img/logo.png" alt="Logo"></a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li>

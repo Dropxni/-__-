@@ -1,12 +1,11 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['user_id'])) {
+// Verificar si el usuario está logueado y si es administrador
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') {
     header('Location: login_admin.php');
     exit();
 }
-
 require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_ids'])) {

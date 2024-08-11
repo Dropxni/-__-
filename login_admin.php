@@ -2,8 +2,8 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     // Conexión a la base de datos
     $conn = new mysqli('localhost', 'root', '', 'EduExpedientes');
@@ -13,17 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Verificamos las credenciales del usuario
-    $sql = "SELECT id, password_hash FROM Usuarios WHERE username = ? AND tipo = 'Administrador' AND activo = 1";
+    $sql = "SELECT id, password_hash, tipo FROM Usuarios WHERE username = ? AND activo = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('s', $username);
     $stmt->execute();
-    $stmt->bind_result($id, $passwordHash);
+    $stmt->bind_result($id, $passwordHash, $tipo);
     $stmt->fetch();
 
-    if ($id && password_verify($password, $passwordHash)) {
+    if ($id && password_verify($password, $passwordHash) && $tipo === 'Administrador') {
         // Autenticación exitosa
         $_SESSION['user_id'] = $id;
         $_SESSION['username'] = $username;
+        $_SESSION['user_role'] = $tipo; // Añadimos el rol del usuario a la sesión
+
         // Redireccionar a la página de administración o dashboard
         header('Location: admin_dashboard.php');
         exit();
