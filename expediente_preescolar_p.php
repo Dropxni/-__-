@@ -1,18 +1,36 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y si es administrador
+// Verificar si el usuario está logueado y si es personal
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
     header('Location: login_personal.php');
     exit();
 }
+
+require_once 'config.php';
+
+$conn = db_connect();
+
+// Obtener alumnos de preescolar
+$sql = "SELECT id, nombre, apellido_paterno, apellido_materno, edad, fotografia FROM Preescolar WHERE activo = 1";
+$result = $conn->query($sql);
+
+$alumnos = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $alumnos[] = $row;
+    }
+}
+
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Personal</title>
+    <title>Expediente de Alumnos Preescolar</title>
     <!-- Import Google Icon Font -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Import Google Fonts -->
@@ -47,23 +65,49 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
         }
 
         .content {
-            text-align: center;
             margin-top: 100px;
             animation: fadeIn 2s;
         }
 
-        .content img {
-            max-width: 300px;
+        .card-custom {
+            background-color: #ffccbc;
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-image-custom {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-content-custom {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card-content-custom p {
+            margin: 5px 0;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            background-color: #ffe8d6;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        .modal {
-            max-width: 600px;
-            z-index: 1200 !important; /* Asegura que el modal esté sobre el sidenav */
         }
 
         /* Menú móvil alineado con el navbar */
@@ -105,6 +149,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
                 display: none; /* Esconde el sidenav en pantallas grandes */
             }
         }
+
+        .modal {
+            max-width: 600px;
+            z-index: 1200 !important; /* Asegura que el modal esté sobre el sidenav */
+        }
     </style>
 </head>
 <body>
@@ -117,7 +166,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
                     <a class="dropdown-trigger" href="#!" data-target="dropdown2">Expediente<i class="material-icons right">arrow_drop_down</i></a>
                 </li>
                 <li>
-                    <a href="#modalLogout" class="modal-trigger">Cerrar sesión</a>
+                    <a href="#logoutModal" class="modal-trigger">Cerrar sesión</a>
                 </li>
             </ul>
         </div>
@@ -131,23 +180,43 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
     <ul class="sidenav" id="mobile-demo">
         <li><a href="expediente_preescolar_p.php"><i class="material-icons">folder_open</i>Preescolar</a></li>
         <li><a href="expediente_maternal_p.php"><i class="material-icons">folder_open</i>Maternal</a></li>
-        <li><a href="#modalLogout" class="modal-trigger"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
+        <li><a href="#logoutModal" class="modal-trigger"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
     </ul>
 
-    <div class="content">
-        <h1 class="display-4">BIENVENIDO</h1>
-        <img src="img/welcome-lion.png" alt="Welcome Lion">
+    <div class="container content">
+        <h2 class="text-center">EXPEDIENTE DE ALUMNOS DE PREESCOLAR</h2>
+        <div class="row">
+            <div class="col s12 m10 l8 offset-m1 offset-l2">
+                <div class="input-field">
+                    <i class="material-icons prefix">search</i>
+                    <input type="text" id="searchBar" class="search-bar" onkeyup="searchStudents()" placeholder="Buscar por nombre...">
+                </div>
+            </div>
+        </div>
+        <div class="row" id="studentContainer">
+            <?php foreach ($alumnos as $alumno): ?>
+                <div class="col s12 m6 l3 student-card">
+                    <div class="card-custom" onclick="viewStudent(<?php echo $alumno['id']; ?>)">
+                        <img src="<?php echo $alumno['fotografia']; ?>" alt="Student Photo" class="card-image-custom">
+                        <div class="card-content-custom">
+                            <p class="student-name"><?php echo $alumno['nombre'] . ' ' . $alumno['apellido_paterno'] . ' ' . $alumno['apellido_materno']; ?></p>
+                            <p>Edad: <?php echo $alumno['edad']; ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 
     <!-- Modal Structure for Logout -->
-    <div id="modalLogout" class="modal">
+    <div id="logoutModal" class="modal">
         <div class="modal-content">
-            <h4>Confirmar Cierre de Sesión</h4>
-            <p>¿Está seguro que desea cerrar sesión?</p>
+            <h4>Cerrar sesión</h4>
+            <p>¿Está seguro de que desea cerrar sesión?</p>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-            <a href="logout_personal.php" class="modal-close waves-effect waves-red btn-flat">Cerrar Sesión</a>
+            <a href="logout_personal.php" class="waves-effect waves-red btn-flat">Cerrar sesión</a>
         </div>
     </div>
 
@@ -167,7 +236,29 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Personal') {
 
             var elemsModal = document.querySelectorAll('.modal');
             M.Modal.init(elemsModal);
+
+            M.updateTextFields();
         });
+
+        function viewStudent(id) {
+            window.location.href = 'ver_preescolar.php?id=' + id;
+        }
+
+        function searchStudents() {
+            var input, filter, cards, name, i;
+            input = document.getElementById('searchBar');
+            filter = input.value.toLowerCase();
+            cards = document.getElementsByClassName('student-card');
+
+            for (i = 0; i < cards.length; i++) {
+                name = cards[i].getElementsByClassName('student-name')[0].innerText;
+                if (name.toLowerCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 </html>

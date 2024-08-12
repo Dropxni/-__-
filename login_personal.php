@@ -4,41 +4,38 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
-    $errors = [];
 
-    //
+    // Conexión a la base de datos
     $conn = new mysqli('localhost', 'root', '', 'EduExpedientes');
 
     if ($conn->connect_error) {
         die("Conexión fallida: " . $conn->connect_error);
     }
 
-        // Verificar las credenciales del usuario
-        $sql = "SELECT id, password_hash FROM Usuarios WHERE username = ? AND tipo = 'Personal' AND activo = 1";
-        if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param('s', $username);
-            $stmt->execute();
-            $stmt->bind_result($id, $passwordHash);
-            $stmt->fetch();
+    // Verificamos las credenciales del usuario
+    $sql = "SELECT id, password_hash, tipo FROM Usuarios WHERE username = ? AND activo = 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $stmt->bind_result($id, $passwordHash, $tipo);
+    $stmt->fetch();
 
-            if ($id && password_verify($password, $passwordHash)) {
-                // Autenticación exitosa
-                $_SESSION['user_id'] = $id;
-                $_SESSION['username'] = $username;
-                header('Location: personal_dashboard.php');
-                exit();
-            } else {
-                $errors[] = 'Nombre de usuario o contraseña incorrectos.';
-            }
+    if ($id && password_verify($password, $passwordHash) && $tipo === 'Personal') {
+        // Autenticación exitosa
+        $_SESSION['user_id'] = $id;
+        $_SESSION['username'] = $username;
+        $_SESSION['user_role'] = $tipo; // Añadimos el rol del usuario a la sesión
 
-            $stmt->close();
-        } else {
-            $errors[] = "Error de preparación de consulta: " . $conn->error;
-        }
-
-        $conn->close();
+        // Redireccionar a la página de administración o dashboard
+        header('Location: personal_dashboard.php');
+        exit();
+    } else {
+        $error_message = "Nombre de usuario o contraseña incorrectos.";
     }
 
+    $stmt->close();
+    $conn->close();
+}
 ?>
 
 <!DOCTYPE html>
