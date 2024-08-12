@@ -38,19 +38,33 @@ $conn->close();
             background-color: #f8f9fa;
             font-family: 'Baloo 2', cursive;
             color: #555;
+            padding-top: 64px; /* Espacio para el navbar fijo */
         }
-        .navbar, .dropdown-content {
+
+        /* Navbar fijo */
+        nav, .dropdown-content {
             background-color: #f8c291 !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
-        .navbar a, .dropdown-content a {
+
+        nav a, .dropdown-content a {
             color: #555 !important;
         }
+
         .brand-logo img {
             max-width: 50px;
+            margin-top: 7px;
         }
+
         .content {
-            margin-top: 50px;
+            margin-top: 100px;
+            animation: fadeIn 2s;
         }
+
         .form-container {
             background-color: #ffffff;
             padding: 20px;
@@ -58,52 +72,65 @@ $conn->close();
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
         }
+
         .form-container:hover {
             transform: translateY(-5px);
         }
-        .input-field input[type=text]:not(.file-input), .input-field input[type=number]:not(.file-input) {
+
+        .input-field input[type=text]:not(.file-input), 
+        .input-field input[type=number]:not(.file-input) {
             background-color: #ffe8d6;
-            pointer-events: none;
         }
+
         .file-input {
             background-color: #ffe8d6;
         }
+
         .btn-primary {
             background-color: #C2185B !important;
             border: none;
         }
+
         .btn-primary:hover {
             background-color: #a71d44 !important;
         }
+
         .header {
             margin-bottom: 30px;
         }
+
         .header h2 {
             font-size: 2.5rem;
         }
+
         .pdf-buttons {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .pdf-buttons .btn-small {
             padding: 0 10px;
             font-size: 14px;
         }
+
         .preview-image {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
             position: relative;
         }
+
         .preview-image img {
             max-width: 100px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .hide {
             display: none;
         }
+
         .editable-icon {
             cursor: pointer;
             position: absolute;
@@ -111,24 +138,30 @@ $conn->close();
             top: 10px;
             color: #C2185B;
         }
+
         .editable-icon:hover {
             color: #a71d44;
         }
+
         .file-icons .btn-small i {
             margin: 0;
         }
+
         .file-icons {
             display: flex;
             align-items: center;
             gap: 5px;
         }
+
         .file-field .file-path-wrapper {
             display: flex;
             align-items: center;
         }
+
         .file-field .file-path-wrapper input {
             flex-grow: 1;
         }
+
         @media (max-width: 768px) {
             .form-container {
                 margin: 0 15px;
@@ -137,17 +170,68 @@ $conn->close();
                 font-size: 2rem;
             }
         }
+
         @media (min-width: 992px) {
             .form-container {
                 max-width: 800px;
                 margin: 0 auto;
             }
         }
+
+        /* Menú móvil alineado con el navbar */
+        .sidenav {
+            height: 100%; /* Ocupa todo el alto de la pantalla */
+            background-color: #fff !important;
+            top: 64px; /* Alinea la parte superior del sidenav con el navbar */
+            z-index: 1100; /* Asegura que el sidenav esté por encima del contenido */
+            position: fixed;
+        }
+
+        .sidenav li {
+            padding: 0; /* Elimina el padding para que el tamaño coincida con el navbar */
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a {
+            display: flex;
+            align-items: center;
+            color: #555;
+            height: 64px; /* Establece la altura de los elementos del sidenav igual a la del navbar */
+            line-height: 64px; /* Centra el texto verticalmente */
+            padding-left: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidenav li a:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a i {
+            margin-right: 10px;
+        }
+
+        @media (min-width: 992px) {
+            .sidenav {
+                display: none; /* Esconde el sidenav en pantallas grandes */
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Modal */
+        .modal {
+            z-index: 1200 !important; /* Asegura que el modal esté sobre el sidenav */
+        }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-wrapper navbar">
+        <div class="nav-wrapper">
             <a href="admin_dashboard.php" class="brand-logo"><img src="img/logo.png" alt="Logo"></a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
@@ -158,7 +242,7 @@ $conn->close();
                     <a class="dropdown-trigger" href="#!" data-target="dropdown2">Expediente<i class="material-icons right">arrow_drop_down</i></a>
                 </li>
                 <li>
-                    <a href="logout.php">Cerrar sesión</a>
+                    <a href="#modalLogout" class="modal-trigger">Cerrar sesión</a>
                 </li>
             </ul>
         </div>
@@ -176,13 +260,13 @@ $conn->close();
     </ul>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a href="registro_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="registro_maternal.php">Alumnos maternal</a></li>
-        <li><a href="registro_profesor.php">Profesores</a></li>
-        <li><a href="expediente_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="expediente_maternal.php">Alumnos maternal</a></li>
-        <li><a href="expediente_profesores.php">Profesores</a></li>
-        <li><a href="logout.php">Cerrar sesión</a></li>
+        <li><a href="registro_preescolar.php"><i class="material-icons">person_add</i>Preescolar</a></li>
+        <li><a href="registro_maternal.php"><i class="material-icons">person_add</i>Maternal</a></li>
+        <li><a href="registro_profesor.php"><i class="material-icons">person_add</i>Profesores</a></li>
+        <li><a href="expediente_preescolar.php"><i class="material-icons">folder_open</i>Preescolar</a></li>
+        <li><a href="expediente_maternal.php"><i class="material-icons">folder_open</i>Maternal</a></li>
+        <li><a href="expediente_profesores.php"><i class="material-icons">folder_open</i>Profesores</a></li>
+        <li><a href="#modalLogout" class="modal-trigger"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
     </ul>
 
     <div class="container content">
@@ -285,6 +369,18 @@ $conn->close();
         </div>
     </div>
 
+    <!-- Modal Structure for Logout -->
+    <div id="modalLogout" class="modal">
+        <div class="modal-content">
+            <h4>Confirmar Cierre de Sesión</h4>
+            <p>¿Está seguro que desea cerrar sesión?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+            <a href="logout_admin.php" class="modal-close waves-effect waves-red btn-flat">Cerrar Sesión</a>
+        </div>
+    </div>
+
     <!-- Import jQuery and MaterializeJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -298,6 +394,9 @@ $conn->close();
 
             var elemsSidenav = document.querySelectorAll('.sidenav');
             M.Sidenav.init(elemsSidenav);
+
+            var elemsModal = document.querySelectorAll('.modal');
+            M.Modal.init(elemsModal);
 
             M.updateTextFields();
         });
