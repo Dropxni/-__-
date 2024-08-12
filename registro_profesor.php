@@ -25,19 +25,33 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
             background-color: #f8f9fa;
             font-family: 'Baloo 2', cursive;
             color: #555;
+            padding-top: 64px; /* Espacio para el navbar fijo */
         }
-        .navbar, .dropdown-content {
+
+        /* Navbar fijo */
+        nav, .dropdown-content {
             background-color: #f8c291 !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
-        .navbar a, .dropdown-content a {
+
+        nav a, .dropdown-content a {
             color: #555 !important;
         }
+
         .brand-logo img {
             max-width: 50px;
+            margin-top: 7px;
         }
+
         .content {
-            margin-top: 50px;
+            margin-top: 100px;
+            animation: fadeIn 2s;
         }
+
         .form-container {
             background-color: #ffffff;
             padding: 20px;
@@ -45,40 +59,51 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
         }
+
         .form-container:hover {
             transform: translateY(-5px);
         }
+
         .input-field input[type=text], .input-field input[type=number], .input-field input[type=password] {
             background-color: #ffe8d6;
         }
+
         .btn-primary {
             background-color: #C2185B !important;
             border: none;
         }
+
         .btn-primary:hover {
             background-color: #a71d44 !important;
         }
+
         .header {
             margin-bottom: 30px;
         }
+
         .header h2 {
             font-size: 2.5rem;
         }
+
         .file-field .btn {
             background-color: #C2185B !important;
             margin-left: 10px;
         }
+
         .file-field .btn:hover {
             background-color: #a71d44 !important;
         }
+
         .file-field .file-path-wrapper {
             display: flex;
             align-items: center;
         }
+
         .file-field .file-path-wrapper input[type=text] {
             background-color: #ffe8d6;
             flex-grow: 1;
         }
+
         @media (max-width: 768px) {
             .form-container {
                 margin: 0 15px;
@@ -87,17 +112,68 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
                 font-size: 2rem;
             }
         }
+
         @media (min-width: 992px) {
             .form-container {
                 max-width: 800px;
                 margin: 0 auto;
             }
         }
+
+        /* Menú móvil alineado con el navbar */
+        .sidenav {
+            height: 100%; /* Ocupa todo el alto de la pantalla */
+            background-color: #fff !important;
+            top: 64px; /* Alinea la parte superior del sidenav con el navbar */
+            z-index: 1100; /* Asegura que el sidenav esté por encima del contenido */
+            position: fixed;
+        }
+
+        .sidenav li {
+            padding: 0; /* Elimina el padding para que el tamaño coincida con el navbar */
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a {
+            display: flex;
+            align-items: center;
+            color: #555;
+            height: 64px; /* Establece la altura de los elementos del sidenav igual a la del navbar */
+            line-height: 64px; /* Centra el texto verticalmente */
+            padding-left: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidenav li a:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a i {
+            margin-right: 10px;
+        }
+
+        @media (min-width: 992px) {
+            .sidenav {
+                display: none; /* Esconde el sidenav en pantallas grandes */
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Z-index elevado para el modal */
+        .modal {
+            z-index: 1200 !important; /* Asegura que el modal esté sobre el sidenav */
+        }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-wrapper navbar">
+        <div class="nav-wrapper">
             <a href="admin_dashboard.php" class="brand-logo"><img src="img/logo.png" alt="Logo"></a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
@@ -126,13 +202,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
     </ul>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a href="registro_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="registro_maternal.php">Alumnos maternal</a></li>
-        <li><a href="registro_profesor.php">Profesores</a></li>
-        <li><a href="expediente_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="expediente_maternal.php">Alumnos maternal</a></li>
-        <li><a href="expediente_profesores.php">Profesores</a></li>
-        <li><a href="#logoutModal" class="modal-trigger">Cerrar sesión</a></li>
+        <li><a href="registro_preescolar.php"><i class="material-icons">person_add</i>Preescolar</a></li>
+        <li><a href="registro_maternal.php"><i class="material-icons">person_add</i>Maternal</a></li>
+        <li><a href="registro_profesor.php"><i class="material-icons">person_add</i>Profesores</a></li>
+        <li><a href="expediente_preescolar.php"><i class="material-icons">folder_open</i>Preescolar</a></li>
+        <li><a href="expediente_maternal.php"><i class="material-icons">folder_open</i>Maternal</a></li>
+        <li><a href="expediente_profesores.php"><i class="material-icons">folder_open</i>Profesores</a></li>
+        <li><a href="#logoutModal" class="modal-trigger"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
     </ul>
 
     <div class="container content">

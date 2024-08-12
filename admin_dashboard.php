@@ -7,7 +7,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,31 +24,86 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
             background-color: #f8f9fa;
             font-family: 'Baloo 2', cursive;
             color: #555;
+            padding-top: 64px; /* Espacio para el navbar fijo */
         }
+
+        /* Navbar fijo */
         nav, .dropdown-content {
             background-color: #f8c291 !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
+
         nav a, .dropdown-content a {
             color: #555 !important;
         }
+
         .brand-logo img {
             max-width: 50px;
             margin-top: 7px;
         }
+
         .content {
             text-align: center;
             margin-top: 100px;
             animation: fadeIn 2s;
         }
+
         .content img {
             max-width: 300px;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         .modal {
             max-width: 600px;
+            z-index: 1200 !important; /* Asegura que el modal esté sobre el sidenav */
+        }
+
+        /* Menú móvil alineado con el navbar */
+        .sidenav {
+            height: 100%; /* Ocupa todo el alto de la pantalla */
+            background-color: #fff !important;
+            top: 64px; /* Alinea la parte superior del sidenav con el navbar */
+            z-index: 1100; /* Asegura que el sidenav esté por encima del contenido */
+            position: fixed;
+        }
+
+        .sidenav li {
+            padding: 0; /* Elimina el padding para que el tamaño coincida con el navbar */
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a {
+            display: flex;
+            align-items: center;
+            color: #555;
+            height: 64px; /* Establece la altura de los elementos del sidenav igual a la del navbar */
+            line-height: 64px; /* Centra el texto verticalmente */
+            padding-left: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidenav li a:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav li a i {
+            margin-right: 10px;
+        }
+
+        @media (min-width: 992px) {
+            .sidenav {
+                display: none; /* Esconde el sidenav en pantallas grandes */
+            }
         }
     </style>
 </head>
@@ -73,24 +127,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Administrador') 
     </nav>
 
     <ul id="dropdown1" class="dropdown-content">
-        <li><a href="registro_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="registro_maternal.php">Alumnos maternal</a></li>
+        <li><a href="registro_preescolar.php">Preescolar</a></li>
+        <li><a href="registro_maternal.php">Maternal</a></li>
         <li><a href="registro_profesor.php">Profesores</a></li>
     </ul>
     <ul id="dropdown2" class="dropdown-content">
-        <li><a href="expediente_preescolar.php">Alumnos preescolar</a></li>
-        <li><a href="expediente_maternal.php">Alumnos maternal</a></li>
+        <li><a href="expediente_preescolar.php">Preescolar</a></li>
+        <li><a href="expediente_maternal.php">Maternal</a></li>
         <li><a href="expediente_profesores.php">Profesores</a></li>
     </ul>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a href="registro_preescolar.php">Registrar Alumno Preescolar</a></li>
-        <li><a href="registro_maternal.php">Registrar Alumno Maternal</a></li>
-        <li><a href="registro_profesor.php">Registrar Profesores</a></li>
-        <li><a href="expediente_preescolar.php">Ver Alumnos Preescolar</a></li>
-        <li><a href="expediente_maternal.php">Ver Alumnos Maternal</a></li>
-        <li><a href="expediente_profesores.php">Ver Profesores</a></li>
-        <li><a href="#modalLogout" class="modal-trigger">Cerrar sesión</a></li>
+        <li><a href="registro_preescolar.php"><i class="material-icons">person_add</i>Preescolar</a></li>
+        <li><a href="registro_maternal.php"><i class="material-icons">person_add</i>Maternal</a></li>
+        <li><a href="registro_profesor.php"><i class="material-icons">person_add</i>Profesores</a></li>
+        <li><a href="expediente_preescolar.php"><i class="material-icons">folder_open</i>Preescolar</a></li>
+        <li><a href="expediente_maternal.php"><i class="material-icons">folder_open</i>Maternal</a></li>
+        <li><a href="expediente_profesores.php"><i class="material-icons">folder_open</i>Profesores</a></li>
+        <li><a href="#modalLogout" class="modal-trigger"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
     </ul>
 
     <div class="content">
